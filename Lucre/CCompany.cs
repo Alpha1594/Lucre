@@ -20,7 +20,17 @@ namespace Lucre
             InitializeComponent();
             LoadCompaniesList();
             if (Name != "")
+            {
                 TBName.Text = Name;
+                LatestStringSub = Name + "*";
+            }
+        }
+
+        public static string LatestStringSub;
+
+        public static string GetReturnValue()
+        {
+            return LatestStringSub;
         }
 
         private void BTNWrite_Click(object sender, EventArgs e)

@@ -163,6 +163,8 @@ namespace Lucre
 
         private void BTNWrite_Click(object sender, EventArgs e)
         {
+            CBCompany.Text = Main.CheckCompanies(CBCompany.Text);
+
             SInventory I = new SInventory(TBName.Text, NUCost.Value,
                 int.Parse(NUQuantity.Value.ToString()), DTPPurchasedOn.Value,
                 CBCategory.Text, CBCompany.Text, ChBToInsure.Checked,
@@ -179,6 +181,12 @@ namespace Lucre
         {
             if (NUQuantity.Value > 1)       // Needed because used for Cost_Changed event
                 TTAltPrice.Show(MultiCost(), this.NUCost);
+        }
+
+        private void CompanyChanged(object sender, EventArgs e)
+        {
+            if (CBCategory.Text == "")
+                CBCategory.Text = Main.SetCategory(CBCompany.Text);
         }
     }
 }

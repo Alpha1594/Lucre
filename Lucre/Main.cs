@@ -146,6 +146,7 @@ namespace Lucre
         public static List<Transaction> Transactions = new List<Transaction>();
         #endregion
 
+        #region Companies
         public struct Company
         {
 			public string Name;
@@ -175,6 +176,7 @@ namespace Lucre
         public static List<Company> Companies = new List<Company>();
         public static System.Windows.Forms.AutoCompleteStringCollection ACS = new AutoCompleteStringCollection();
         public static string[] sACS;
+        #endregion
 
         #endregion
 
@@ -267,6 +269,25 @@ namespace Lucre
             FS.Dispose();
         }
 
+        public static string CheckCompanies(string STRInput)
+        {
+            if (STRInput == "")
+                return "";
+            foreach (Main.Company C in Main.Companies)
+            {
+                if (C.Name == STRInput || C.AbbrName == STRInput)
+                    return C.Name;
+            }
+            CCompany CC = new CCompany(STRInput);
+            CC.ShowDialog();
+            return CCompany.GetReturnValue();
+        }
+
+        public static string SetCategory(string STRInput)
+        {
+            return null;
+        }
+
         private void financeRCToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FinanceRC FRC = new FinanceRC(false);
@@ -299,7 +320,7 @@ namespace Lucre
 
         private void companyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CCompany C = new CCompany("Bouncing Ferret");
+            CCompany C = new CCompany("");
             C.ShowDialog();
         }
     }

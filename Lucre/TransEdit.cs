@@ -50,6 +50,8 @@ namespace Lucre
 
         private void BTNWriteData_Click(object sender, EventArgs e)
         {
+            CBCompany.Text = Main.CheckCompanies(CBCompany.Text);
+
             Main.Transaction T = new Main.Transaction(
                 TBName.Text, CBCategory.Text, CBCompany.Text,
                 new Main.CapTime(NUPredicted.Value, DTPPredicted.Value),
@@ -62,7 +64,6 @@ namespace Lucre
             if (GIndex.HasValue)
                 Main.Transactions.RemoveAt((int)GIndex.Value);
             Main.SaveTransactions();
-            //BTNWriteData.Text = "Save";
         }
 
         private string SetChBCompleteString()
