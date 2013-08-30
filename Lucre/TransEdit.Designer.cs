@@ -92,6 +92,7 @@
             this.CBCompany.Name = "CBCompany";
             this.CBCompany.Size = new System.Drawing.Size(121, 21);
             this.CBCompany.TabIndex = 3;
+            this.CBCompany.SelectedIndexChanged += new System.EventHandler(this.CompanyChanged);
             // 
             // CBCategory
             // 

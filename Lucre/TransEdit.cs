@@ -160,5 +160,12 @@ namespace Lucre
 
             BTNWriteData.Text = "Update";
         }
+
+        private void CompanyChanged(object sender, EventArgs e)
+        {
+            if (CBCategory.Text == "")
+                CBCategory.Text = Main.SetCategory(CBCompany.Text);
+            
+        }
     }
 }

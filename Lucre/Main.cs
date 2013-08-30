@@ -77,7 +77,7 @@ namespace Lucre
         {
             try
             {
-                FileStream FS = new FileStream("Finance.rc", FileMode.Open);
+                FileStream FS = new FileStream("Data\\Finance.rc", FileMode.Open);
                 XmlSerializer XSR = new XmlSerializer(typeof(SFinanceRC));
                 return (SFinanceRC)XSR.Deserialize(FS);
             }
@@ -185,7 +185,7 @@ namespace Lucre
             InitializeComponent();
             this.Show();
             LoadData();
-
+            
             //string[] stArry = { "Foo", "Bar", "Baz" };
             //ACS.AddRange(stArry);
             //List<string> lACS = new List<string>(stArry);
@@ -193,11 +193,21 @@ namespace Lucre
             //sACS = lACS.ToArray();
         }
 
+        public static void CheckURI()
+        {
+            string URI = Environment.CurrentDirectory;
+            //MessageBox.Show(URI);
+            string FullURI = Path.Combine(URI, "Data");
+            if (!Directory.Exists(FullURI))
+                Directory.CreateDirectory(FullURI);
+        }
+
         private void LoadData()
         {
-            if (File.Exists("Finance.rc"))
+            CheckURI();
+            if (File.Exists("Data\\Finance.rc"))
             {
-                FileStream FS = new FileStream("Finance.rc", FileMode.Open);
+                FileStream FS = new FileStream("Data\\Finance.rc", FileMode.Open);
                 XmlSerializer XSR = new XmlSerializer(typeof(SFinanceRC));
                 RC = (SFinanceRC)XSR.Deserialize(FS);
                 FS.Dispose();
@@ -208,18 +218,18 @@ namespace Lucre
                 FRC.ShowDialog();
             }
 
-            if (File.Exists("Transactions.xml"))
+            if (File.Exists("Data\\Transactions.xml"))
             {
-                FileStream FS = new FileStream("Transactions.xml", FileMode.Open);
+                FileStream FS = new FileStream("Data\\Transactions.xml", FileMode.Open);
                 XmlSerializer XSR = new XmlSerializer(typeof(List<Transaction>));
                 Transactions = (List<Transaction>) XSR.Deserialize(FS);
                 FS.Dispose();
                 DisplayTransList();
             }
 
-            if (File.Exists("Companies.xml"))
+            if (File.Exists("Data\\Companies.xml"))
             {
-                FileStream FS = new FileStream("Companies.xml", FileMode.Open);
+                FileStream FS = new FileStream("Data\\Companies.xml", FileMode.Open);
                 XmlSerializer XSR = new XmlSerializer(typeof(List<Company>));
                 Companies = (List<Company>)XSR.Deserialize(FS);
 
@@ -250,7 +260,8 @@ namespace Lucre
         {
             try
             {
-                FileStream FS = new FileStream("Finance.rc", FileMode.Create);
+                CheckURI();
+                FileStream FS = new FileStream("Data\\Finance.rc", FileMode.Create);
                 XmlSerializer XSR = new XmlSerializer(typeof(SFinanceRC));
                 XSR.Serialize(FS, RC);
                 FS.Dispose();
@@ -263,7 +274,9 @@ namespace Lucre
 
         public static void SaveTransactions()
         {
-            FileStream FS = new FileStream("Transactions.xml", FileMode.Create);
+            CheckURI();
+            //string URI = Environment.CurrentDirectory;
+            FileStream FS = new FileStream("Data\\Transactions.xml", FileMode.Create);
             XmlSerializer XSR = new XmlSerializer(typeof(List<Transaction>));
             XSR.Serialize(FS, Transactions);
             FS.Dispose();
@@ -285,6 +298,9 @@ namespace Lucre
 
         public static string SetCategory(string STRInput)
         {
+            foreach (Company C in Companies)
+                if (C.Name == STRInput)
+                    return C.Category;
             return null;
         }
 

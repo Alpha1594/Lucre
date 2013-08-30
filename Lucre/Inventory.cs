@@ -57,9 +57,9 @@ namespace Lucre
 
         private void LoadInventory()
         {
-            if (File.Exists("Inventory.xml"))
+            if (File.Exists("Data\\Inventory.xml"))
             {
-                FileStream FS = new FileStream("Inventory.xml", FileMode.Open);
+                FileStream FS = new FileStream("Data\\Inventory.xml", FileMode.Open);
                 XmlSerializer XSR = new XmlSerializer(typeof(List<SInventory>));
                 TheInventory = (List<SInventory>)XSR.Deserialize(FS);
                 FS.Dispose();
@@ -100,7 +100,7 @@ namespace Lucre
 
         private void SaveInventory()
         {
-            FileStream FS = new FileStream("Inventory.xml", FileMode.Create);
+            FileStream FS = new FileStream("Data\\Inventory.xml", FileMode.Create);
             XmlSerializer XSR = new XmlSerializer(typeof(List<SInventory>));
             XSR.Serialize(FS, TheInventory);
             FS.Dispose();
@@ -170,7 +170,7 @@ namespace Lucre
                 CBCategory.Text, CBCompany.Text, ChBToInsure.Checked,
                 GetWarrantyDuration());
             TheInventory.Add(I);
-            if (BTNWrite.Text == "Update")
+            if (BTNWrite.Text == "Data\\Update")
                 TheInventory.RemoveAt(LBInventory.SelectedIndex);
             SaveInventory();
             LoadInventory();

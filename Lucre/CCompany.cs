@@ -41,7 +41,9 @@ namespace Lucre
                 TBAddress.Lines, TBNotes.Lines,
                 (int) NUProTime.Value);
             Main.Companies.Add(C);
-            if (BTNWrite.Text == "Update")
+
+            Main.CheckURI();
+            if (BTNWrite.Text == "Data\\Update")
                 Main.Companies.RemoveAt(LBCompanies.SelectedIndex);
             WriteCompanies();
         }
@@ -65,7 +67,8 @@ namespace Lucre
 
         private void WriteCompanies()
         {
-            FileStream FS = new FileStream("Companies.xml", FileMode.Create);
+            Main.CheckURI();
+            FileStream FS = new FileStream("Data\\Companies.xml", FileMode.Create);
             XmlSerializer XSR = new XmlSerializer(typeof(List<Main.Company>));
             XSR.Serialize(FS, Main.Companies);
             FS.Dispose();
