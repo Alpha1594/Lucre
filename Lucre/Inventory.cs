@@ -34,17 +34,19 @@ namespace Lucre
             public string Name;
             public decimal Cost;
             public int Quantity;
+            public bool CostPerUnit;
             public DateTime PurchasedOn;
             public string Category;
             public string Company;
             public bool ToInsure;
             public Main.Duration? Warranty;
 
-            public SInventory(string Name, decimal Cost, int Quantity, DateTime PurchasedOn, string Category, string Company, bool ToInsure, Main.Duration? Warranty)
+            public SInventory(string Name, decimal Cost, int Quantity, bool CostPerUnit, DateTime PurchasedOn, string Category, string Company, bool ToInsure, Main.Duration? Warranty)
 			{
 				this.Name = Name;
 				this.Cost = Cost;
 				this.Quantity = Quantity;
+                this.CostPerUnit = CostPerUnit;
 				this.PurchasedOn = PurchasedOn;
 				this.Category = Category;
 				this.Company = Company;
@@ -57,6 +59,7 @@ namespace Lucre
 
         private void LoadInventory()
         {
+            Main.CheckURI();
             if (File.Exists("Data\\Inventory.xml"))
             {
                 FileStream FS = new FileStream("Data\\Inventory.xml", FileMode.Open);
@@ -84,6 +87,7 @@ namespace Lucre
             TBName.Text = I.Name;
             NUCost.Value = I.Cost;
             NUQuantity.Value = I.Quantity;
+            ChBCostPerUnit.Checked = I.CostPerUnit;
             DTPPurchasedOn.Value = I.PurchasedOn;
             CBCompany.Text = I.Company;
             CBCategory.Text = I.Category;
@@ -100,6 +104,7 @@ namespace Lucre
 
         private void SaveInventory()
         {
+            Main.CheckURI();
             FileStream FS = new FileStream("Data\\Inventory.xml", FileMode.Create);
             XmlSerializer XSR = new XmlSerializer(typeof(List<SInventory>));
             XSR.Serialize(FS, TheInventory);
@@ -117,8 +122,17 @@ namespace Lucre
         {
             decimal Total = 0;
             foreach (SInventory I in TheInventory)
-                Total += I.ToInsure ? I.Cost : 0;
+                Total += I.ToInsure ? ItemCost(I) : 0;
             LBLTotal.Text = "£" + Total.ToString();
+        }
+
+        private decimal ItemCost(SInventory I)
+        {
+            if (I.Quantity > 1 && I.CostPerUnit )
+            {
+                return I.Cost * I.Quantity;
+            }
+            else return I.Cost;
         }
 
         private string MultiCost()
@@ -150,8 +164,8 @@ namespace Lucre
                 ChBCostPerUnit.Enabled = true;
                 NUQuantity.Size = new Size(40, NUQuantity.Size.Height);
 
-                //TTAltPrice.SetToolTip(this.NUCost, MultiCost());
-                TTAltPrice.Show(MultiCost(),this.NUCost);
+                TTAltPrice.SetToolTip(this.NUCost, MultiCost());
+                //TTAltPrice.Show(MultiCost(),this.NUCost);
             }
             else
             {
@@ -166,9 +180,11 @@ namespace Lucre
             CBCompany.Text = Main.CheckCompanies(CBCompany.Text);
 
             SInventory I = new SInventory(TBName.Text, NUCost.Value,
-                int.Parse(NUQuantity.Value.ToString()), DTPPurchasedOn.Value,
-                CBCategory.Text, CBCompany.Text, ChBToInsure.Checked,
+                int.Parse(NUQuantity.Value.ToString()), ChBCostPerUnit.Checked,
+                DTPPurchasedOn.Value, CBCategory.Text,
+                CBCompany.Text, ChBToInsure.Checked,
                 GetWarrantyDuration());
+
             TheInventory.Add(I);
             if (BTNWrite.Text == "Data\\Update")
                 TheInventory.RemoveAt(LBInventory.SelectedIndex);
@@ -180,7 +196,10 @@ namespace Lucre
         private void ChBCostPerUnit_CheckedChanged(object sender, EventArgs e)
         {
             if (NUQuantity.Value > 1)       // Needed because used for Cost_Changed event
-                TTAltPrice.Show(MultiCost(), this.NUCost);
+            {
+                //TTAltPrice.Show(MultiCost(), this.NUCost);
+                TTAltPrice.SetToolTip(this.NUCost, MultiCost());
+            }
         }
 
         private void CompanyChanged(object sender, EventArgs e)

@@ -196,7 +196,6 @@ namespace Lucre
         public static void CheckURI()
         {
             string URI = Environment.CurrentDirectory;
-            //MessageBox.Show(URI);
             string FullURI = Path.Combine(URI, "Data");
             if (!Directory.Exists(FullURI))
                 Directory.CreateDirectory(FullURI);
