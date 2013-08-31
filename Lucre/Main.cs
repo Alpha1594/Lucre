@@ -178,6 +178,9 @@ namespace Lucre
         public static string[] sACS;
         #endregion
 
+        public enum SumMode { Weekly, Monthly, Semester, Quarterly, AAnualy, CAnualy, All };
+        public static SumMode SummingMode = SumMode.All;
+        public static bool IncPrevious = true;
         #endregion
 
         public Main()
@@ -185,12 +188,6 @@ namespace Lucre
             InitializeComponent();
             this.Show();
             LoadData();
-            
-            //string[] stArry = { "Foo", "Bar", "Baz" };
-            //ACS.AddRange(stArry);
-            //List<string> lACS = new List<string>(stArry);
-            //MessageBox.Show(lACS.Count.ToString());
-            //sACS = lACS.ToArray();
         }
 
         public static void CheckURI()
@@ -303,6 +300,7 @@ namespace Lucre
             return null;
         }
 
+        #region EventHandlers
         private void financeRCToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FinanceRC FRC = new FinanceRC(false);
@@ -338,5 +336,48 @@ namespace Lucre
             CCompany C = new CCompany("");
             C.ShowDialog();
         }
+
+        private void weeklyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SummingMode = SumMode.Weekly;
+            LBLSumMode.Text = "Sum Mode: Week";
+        }
+
+        private void monthlyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SummingMode = SumMode.Monthly;
+            LBLSumMode.Text = "Sum Mode: Month";
+        }
+
+        private void termlyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SummingMode = SumMode.Semester;
+            LBLSumMode.Text = "Sum Mode: Semester";
+        }
+
+        private void quarterlyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SummingMode = SumMode.Quarterly;
+            LBLSumMode.Text = "Sum Mode: Quarter";
+        }
+
+        private void anualyCalendarYearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SummingMode = SumMode.CAnualy;
+            LBLSumMode.Text = "Sum Mode: Year (Calendar)";
+        }
+
+        private void anualyAcademicYearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SummingMode = SumMode.AAnualy;
+            LBLSumMode.Text = "Sum Mode: Year (Academic)";
+        }
+
+        private void everyTransactionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SummingMode = SumMode.All;
+            LBLSumMode.Text = "Sum Mode: All";
+        }
+        #endregion
     }
 }
