@@ -13,9 +13,10 @@ namespace Lucre
     public partial class TransEdit : Form
     {
         public int? GIndex = null;
-        public TransEdit(int? Index)
+        public TransEdit(int? Index, bool? IsIncomeL)
         {
             InitializeComponent();
+            IsIncome = IsIncomeL;
             if (Index.HasValue)
             {
                 DisplayTransaction((int) Index);    //Cast !nullable
@@ -30,6 +31,8 @@ namespace Lucre
             }
             catch { }
         }
+
+        public bool? IsIncome;
 
         private Main.Repeat? SetRepeatData()
         {
@@ -60,10 +63,33 @@ namespace Lucre
                 TBNotes.Lines,
                 SetRepeatData()
                 );
-            Main.Transactions.Add(T);
-            if (GIndex.HasValue)
-                Main.Transactions.RemoveAt((int)GIndex.Value);
+            WriteToStruct(T);
             Main.SaveTransactions();
+        }
+
+        private void WriteToStruct(Main.Transaction T)
+        {
+            if (IsIncome.HasValue)
+            {
+                if (IsIncome.Value) //Is Income
+                {
+                    Main.Transactions.In.Add(T);
+                    if (GIndex.HasValue)
+                        Main.Transactions.In.RemoveAt((int)GIndex.Value);
+                }
+                else //Is Outcome
+                {
+                    Main.Transactions.Out.Add(T);
+                    if (GIndex.HasValue)
+                        Main.Transactions.Out.RemoveAt((int)GIndex.Value);
+                }
+            }
+            else //Is Wishlist
+            {
+                    Main.Transactions.WishList.Add(T);
+                    if (GIndex.HasValue)
+                        Main.Transactions.WishList.RemoveAt((int)GIndex.Value);
+            }
         }
 
         private string SetChBCompleteString()
@@ -132,9 +158,26 @@ namespace Lucre
             SetRepeatRegionVisibility();
         }
 
+        private Main.Transaction RetTransaction(int Index)
+        {
+            if (IsIncome.HasValue)
+            {
+                if (IsIncome.Value) // Income
+                    return Main.Transactions.In[Index];
+                else //Outcome
+                {
+                    return Main.Transactions.Out[Index];
+                }
+            }
+            else //WishList
+            {
+				return Main.Transactions.WishList[Index];
+            }
+        }
+
         private void DisplayTransaction(int Index)
         {
-            Main.Transaction T = Main.Transactions[Index];
+            Main.Transaction T = RetTransaction(Index);
 
             TBName.Text = T.Name;
             CBCompany.Text = T.Company;

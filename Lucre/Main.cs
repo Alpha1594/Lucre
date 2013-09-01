@@ -102,6 +102,7 @@ namespace Lucre
                 this.Time = Time;
             }
         }
+
         public struct Repeat
         {
             public Duration? Duration;
@@ -123,7 +124,6 @@ namespace Lucre
             public string Company;
             public CapTime Predicted;
             public Nullable<CapTime> Real;
-            //public CapTime? Real;
             public bool Resolved;
             public string[] Notes;
             public Nullable<Repeat> Repeat;
@@ -143,7 +143,22 @@ namespace Lucre
             }
         }
 
-        public static List<Transaction> Transactions = new List<Transaction>();
+        public struct CashFlow
+		{
+	        public List<Transaction> In;
+	        public List<Transaction> Out;
+            public List<Transaction> WishList;
+
+            public CashFlow(List<Transaction> In, List<Transaction> Out, List<Transaction> WishList)
+            {
+				 this.In = In;
+				 this.Out = Out;
+				 this.WishList = WishList;
+            }
+		}
+
+		public static CashFlow Transactions = new CashFlow();
+
         #endregion
 
         #region Companies
@@ -217,8 +232,8 @@ namespace Lucre
             if (File.Exists("Data\\Transactions.xml"))
             {
                 FileStream FS = new FileStream("Data\\Transactions.xml", FileMode.Open);
-                XmlSerializer XSR = new XmlSerializer(typeof(List<Transaction>));
-                Transactions = (List<Transaction>) XSR.Deserialize(FS);
+                XmlSerializer XSR = new XmlSerializer(typeof(CashFlow));
+                Transactions = (CashFlow) XSR.Deserialize(FS);
                 FS.Dispose();
                 DisplayTransList();
             }
