@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.showFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.financeRCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inventoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,8 +41,12 @@
             this.anualyCalendarYearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.anualyAcademicYearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.everyTransactionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.LBTransactions = new System.Windows.Forms.ListBox();
+            this.LBIn = new System.Windows.Forms.ListBox();
             this.LBLSumMode = new System.Windows.Forms.Label();
+            this.LBOut = new System.Windows.Forms.ListBox();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.inToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.outToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,14 +61,6 @@
             this.menuStrip1.Size = new System.Drawing.Size(284, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "MainMenu";
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.T)));
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(106, 20);
-            this.toolStripMenuItem1.Text = "Add &Transaction";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // showFormToolStripMenuItem
             // 
@@ -171,14 +166,14 @@
             this.everyTransactionToolStripMenuItem.Text = "&Every Transaction";
             this.everyTransactionToolStripMenuItem.Click += new System.EventHandler(this.everyTransactionToolStripMenuItem_Click);
             // 
-            // LBTransactions
+            // LBIn
             // 
-            this.LBTransactions.FormattingEnabled = true;
-            this.LBTransactions.Location = new System.Drawing.Point(12, 27);
-            this.LBTransactions.Name = "LBTransactions";
-            this.LBTransactions.Size = new System.Drawing.Size(120, 186);
-            this.LBTransactions.TabIndex = 1;
-            this.LBTransactions.SelectedIndexChanged += new System.EventHandler(this.ReviewTrans);
+            this.LBIn.FormattingEnabled = true;
+            this.LBIn.Location = new System.Drawing.Point(12, 27);
+            this.LBIn.Name = "LBIn";
+            this.LBIn.Size = new System.Drawing.Size(120, 186);
+            this.LBIn.TabIndex = 1;
+            this.LBIn.SelectedIndexChanged += new System.EventHandler(this.ReviewTransIn);
             // 
             // LBLSumMode
             // 
@@ -189,13 +184,47 @@
             this.LBLSumMode.TabIndex = 2;
             this.LBLSumMode.Text = "Sum Mode: All";
             // 
+            // LBOut
+            // 
+            this.LBOut.FormattingEnabled = true;
+            this.LBOut.Location = new System.Drawing.Point(152, 27);
+            this.LBOut.Name = "LBOut";
+            this.LBOut.Size = new System.Drawing.Size(120, 186);
+            this.LBOut.TabIndex = 3;
+            this.LBOut.SelectedIndexChanged += new System.EventHandler(this.ReviewTransOut);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.inToolStripMenuItem,
+            this.outToolStripMenuItem});
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(108, 20);
+            this.toolStripMenuItem1.Text = "New Transaction";
+            // 
+            // inToolStripMenuItem
+            // 
+            this.inToolStripMenuItem.Name = "inToolStripMenuItem";
+            this.inToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.inToolStripMenuItem.Text = "&In";
+            this.inToolStripMenuItem.Click += new System.EventHandler(this.inToolStripMenuItem_Click);
+            // 
+            // outToolStripMenuItem
+            // 
+            this.outToolStripMenuItem.Name = "outToolStripMenuItem";
+            this.outToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
+            this.outToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.outToolStripMenuItem.Text = "&Out";
+            this.outToolStripMenuItem.Click += new System.EventHandler(this.outToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Controls.Add(this.LBOut);
             this.Controls.Add(this.LBLSumMode);
-            this.Controls.Add(this.LBTransactions);
+            this.Controls.Add(this.LBIn);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Main";
@@ -214,8 +243,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem showFormToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem financeRCToolStripMenuItem;
-        private System.Windows.Forms.ListBox LBTransactions;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ListBox LBIn;
         private System.Windows.Forms.ToolStripMenuItem inventoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem companyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem totalModeToolStripMenuItem;
@@ -227,6 +255,10 @@
         private System.Windows.Forms.ToolStripMenuItem anualyAcademicYearToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem everyTransactionToolStripMenuItem;
         private System.Windows.Forms.Label LBLSumMode;
+        private System.Windows.Forms.ListBox LBOut;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem inToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem outToolStripMenuItem;
     }
 }
 

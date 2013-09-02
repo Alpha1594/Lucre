@@ -235,7 +235,8 @@ namespace Lucre
                 XmlSerializer XSR = new XmlSerializer(typeof(CashFlow));
                 Transactions = (CashFlow) XSR.Deserialize(FS);
                 FS.Dispose();
-                DisplayTransList();
+                DisplayTransIn();
+                DisplayTransOut();
             }
 
             if (File.Exists("Data\\Companies.xml"))
@@ -256,14 +257,25 @@ namespace Lucre
             }
         }
 
-        private void DisplayTransList()
+        private void DisplayTransIn()
         {
-            LBTransactions.Items.Clear();
-            foreach (Transaction T in Transactions)
+            LBIn.Items.Clear();
+            foreach (Transaction T in Transactions.In)
             {
                 string str = T.Name;
                 if (T.Repeat.HasValue) str += "*";
-                LBTransactions.Items.Add(str);
+                LBIn.Items.Add(str);
+            }
+        }
+
+        private void DisplayTransOut()
+        {
+            LBIn.Items.Clear();
+            foreach (Transaction T in Transactions.Out)
+            {
+                string str = T.Name;
+                if (T.Repeat.HasValue) str += "*";
+                LBOut.Items.Add(str);
             }
         }
 
@@ -328,18 +340,17 @@ namespace Lucre
             //MessageBox.Show("Should be loading");
         }
 
-        private void ReviewTrans(object sender, EventArgs e)
+        private void ReviewTransIn(object sender, EventArgs e)
         {
-            TransEdit TE = new TransEdit(LBTransactions.SelectedIndex);
+            TransEdit TE = new TransEdit(LBIn.SelectedIndex, true);
             TE.ShowDialog();
         }
-
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        
+        private void ReviewTransOut(object sender, EventArgs e)
         {
-            TransEdit TE = new TransEdit(null);
+            TransEdit TE = new TransEdit(LBIn.SelectedIndex, false);
             TE.ShowDialog();
         }
-
         private void inventoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Inventory I = new Inventory(null);
@@ -394,5 +405,17 @@ namespace Lucre
             LBLSumMode.Text = "Sum Mode: All";
         }
         #endregion
+
+        private void inToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TransEdit TE = new TransEdit(null, true);
+            TE.ShowDialog();
+        }
+
+        private void outToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TransEdit TE = new TransEdit(null, false);
+            TE.ShowDialog();
+        }
     }
 }

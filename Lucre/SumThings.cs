@@ -18,7 +18,7 @@ namespace Lucre
             switch (Input)
             {
                 case Main.SumMode.All:
-                    return SumAll();
+                    return SumAll(0);
 
                 case Main.SumMode.AAnualy:
                     return 0;
@@ -41,14 +41,9 @@ namespace Lucre
             }
         }
 
-        private static decimal SumAll()
+        private static decimal SumAll(int Type)
         {
-            decimal Total = 0;
-            foreach (Main.Transaction T in Main.Transactions)
-            {
-                Total += T.Real.HasValue ? T.Real.Value.Capital : T.Predicted.Capital;
-            }
-            return Total;
+            return 0;
         }
     }
 }
