@@ -12,7 +12,6 @@ namespace Lucre
 {
     public partial class TransEdit : Form
     {
-        public int? GIndex = null;
         public TransEdit(int? Index, bool? IsIncomeL)
         {
             InitializeComponent();
@@ -31,7 +30,8 @@ namespace Lucre
             }
             catch { }
         }
-
+        
+        public int? GIndex = null;
         public bool? IsIncome;
 
         private Main.Repeat? SetRepeatData()
@@ -63,33 +63,11 @@ namespace Lucre
                 TBNotes.Lines,
                 SetRepeatData()
                 );
-            WriteToStruct(T);
-            Main.SaveTransactions();
-        }
 
-        private void WriteToStruct(Main.Transaction T)
-        {
-            if (IsIncome.HasValue)
-            {
-                if (IsIncome.Value) //Is Income
-                {
-                    Main.Transactions.In.Add(T);
-                    if (GIndex.HasValue)
-                        Main.Transactions.In.RemoveAt((int)GIndex.Value);
-                }
-                else //Is Outcome
-                {
-                    Main.Transactions.Out.Add(T);
-                    if (GIndex.HasValue)
-                        Main.Transactions.Out.RemoveAt((int)GIndex.Value);
-                }
-            }
-            else //Is Wishlist
-            {
-                    Main.Transactions.WishList.Add(T);
-                    if (GIndex.HasValue)
-                        Main.Transactions.WishList.RemoveAt((int)GIndex.Value);
-            }
+            Main.UpdateTransactions(T, IsIncome);
+            if (GIndex.HasValue)
+                Main.RemoveTransaction(GIndex.Value, IsIncome);
+            Main.SaveTransactions();
         }
 
         private string SetChBCompleteString()

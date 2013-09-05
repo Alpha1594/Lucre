@@ -123,7 +123,7 @@ namespace Lucre
             public string Category;
             public string Company;
             public CapTime Predicted;
-            public Nullable<CapTime> Real;
+            public CapTime? Real;
             public bool Resolved;
             public string[] Notes;
             public Nullable<Repeat> Repeat;
@@ -213,6 +213,7 @@ namespace Lucre
                 Directory.CreateDirectory(FullURI);
         }
 
+		#region LoadData
         private void LoadData()
         {
             CheckURI();
@@ -263,14 +264,17 @@ namespace Lucre
             foreach (Transaction T in Transactions.In)
             {
                 string str = T.Name;
-                if (T.Repeat.HasValue) str += "*";
+                if (T.Repeat.HasValue)
+                {
+                    str += "*";
+                }
                 LBIn.Items.Add(str);
             }
         }
 
         private void DisplayTransOut()
         {
-            LBIn.Items.Clear();
+            LBOut.Items.Clear();
             foreach (Transaction T in Transactions.Out)
             {
                 string str = T.Name;
@@ -278,7 +282,9 @@ namespace Lucre
                 LBOut.Items.Add(str);
             }
         }
+		#endregion
 
+		#region WriteData
         public static void SaveRC()
         {
             try
@@ -295,15 +301,54 @@ namespace Lucre
             }
         }
 
+        public static void UpdateTransactions(Transaction T, bool? IsIn)
+        {
+            if (IsIn.HasValue)
+            {
+                if (IsIn.Value)
+                {
+                    List<Transaction> L = Transactions.In;
+                    L.Add(T);
+                    Transactions.In = L;
+                }
+                else
+                {
+                    List<Transaction> L = Transactions.Out;
+                    L.Add(T);
+                    Transactions.Out = L;
+                }
+            }
+            else
+            {
+                List<Transaction> L = Transactions.WishList;
+                L.Add(T);
+                Transactions.WishList = L;
+            }
+        }
+
+        public static void RemoveTransaction(int Index, bool? IsIn)
+        {
+            if (IsIn.HasValue)
+            {
+                if (IsIn.Value)
+                    Transactions.In.RemoveAt(Index);
+                else
+                    Transactions.Out.RemoveAt(Index);
+            }
+			else
+                Transactions.WishList.RemoveAt(Index);
+        }
+
         public static void SaveTransactions()
         {
             CheckURI();
             //string URI = Environment.CurrentDirectory;
             FileStream FS = new FileStream("Data\\Transactions.xml", FileMode.Create);
-            XmlSerializer XSR = new XmlSerializer(typeof(List<Transaction>));
+            XmlSerializer XSR = new XmlSerializer(typeof(Main.CashFlow));
             XSR.Serialize(FS, Transactions);
             FS.Dispose();
         }
+		#endregion
 
         public static string CheckCompanies(string STRInput)
         {
@@ -328,16 +373,11 @@ namespace Lucre
         }
 
         #region EventHandlers
+		#region FormInvocation
         private void financeRCToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FinanceRC FRC = new FinanceRC(false);
             FRC.Show();
-        }
-
-        private void Main_Enter(object sender, EventArgs e)
-        {
-            LoadData();
-            //MessageBox.Show("Should be loading");
         }
 
         private void ReviewTransIn(object sender, EventArgs e)
@@ -345,12 +385,13 @@ namespace Lucre
             TransEdit TE = new TransEdit(LBIn.SelectedIndex, true);
             TE.ShowDialog();
         }
-        
+
         private void ReviewTransOut(object sender, EventArgs e)
         {
             TransEdit TE = new TransEdit(LBIn.SelectedIndex, false);
             TE.ShowDialog();
         }
+
         private void inventoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Inventory I = new Inventory(null);
@@ -363,6 +404,25 @@ namespace Lucre
             C.ShowDialog();
         }
 
+        private void inToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TransEdit TE = new TransEdit(null, true);
+            TE.ShowDialog();
+        }
+
+        private void outToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TransEdit TE = new TransEdit(null, false);
+            TE.ShowDialog();
+        }
+		#endregion
+
+        private void Main_Enter(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+		#region SetTimeRange
         private void weeklyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SummingMode = SumMode.Weekly;
@@ -405,17 +465,6 @@ namespace Lucre
             LBLSumMode.Text = "Sum Mode: All";
         }
         #endregion
-
-        private void inToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TransEdit TE = new TransEdit(null, true);
-            TE.ShowDialog();
-        }
-
-        private void outToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TransEdit TE = new TransEdit(null, false);
-            TE.ShowDialog();
-        }
+        #endregion
     }
 }
