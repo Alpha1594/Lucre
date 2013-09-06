@@ -420,6 +420,8 @@ namespace Lucre
         private void Main_Enter(object sender, EventArgs e)
         {
             LoadData();
+            LBLIn.Text = SumThings.Sum(true).ToString();
+            LBLOut.Text = SumThings.Sum(false).ToString();
         }
 
 		#region SetTimeRange

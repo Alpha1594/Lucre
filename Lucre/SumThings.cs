@@ -8,42 +8,28 @@ namespace Lucre
 {
     class SumThings
     {
-        public static decimal Sum()
+        public static decimal Sum(bool? In)
         {
-            return Sum(Main.SummingMode, Main.IncPrevious);
+            return Sum(Main.SummingMode, Main.IncPrevious, In);
         }
         
-        public static decimal Sum(Main.SumMode Input, bool IncPrevious)
+        public static decimal Sum(Main.SumMode Input, bool IncPrevious, bool? In)
         {
-            switch (Input)
+            decimal Total = 0;
+            if (In.HasValue)
             {
-                case Main.SumMode.All:
-                    return SumAll(0);
-
-                case Main.SumMode.AAnualy:
-                    return 0;
-
-                case Main.SumMode.CAnualy:
-                    return 0;
-
-                case Main.SumMode.Semester:
-                    return 0;
-
-                case Main.SumMode.Quarterly:
-                    return 0;
-
-                case Main.SumMode.Monthly:
-                    return 0;
-
-                case Main.SumMode.Weekly:
-                    return 0;
-                default: return -1;
+                if (In.Value)
+                {
+                    foreach (Main.Transaction T in Main.Transactions.In)
+                        Total += T.Real.HasValue ? T.Real.Value.Capital : T.Predicted.Capital;
+                }
+                else
+                {
+                    foreach (Main.Transaction T in Main.Transactions.Out)
+                        Total += T.Real.HasValue ? T.Real.Value.Capital : T.Predicted.Capital;
+                }
             }
-        }
-
-        private static decimal SumAll(int Type)
-        {
-            return 0;
+            return Total;
         }
     }
 }
