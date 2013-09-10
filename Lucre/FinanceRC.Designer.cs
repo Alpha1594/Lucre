@@ -74,6 +74,7 @@
             this.LBLTerm3Start = new System.Windows.Forms.Label();
             this.LBLTerm3 = new System.Windows.Forms.Label();
             this.CBYearIndustry = new System.Windows.Forms.CheckBox();
+            this.BTNRC = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NUYear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUTerm1Loan)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUTerm1Grant)).BeginInit();
@@ -526,11 +527,22 @@
             this.CBYearIndustry.Text = "Year In Industry";
             this.CBYearIndustry.UseVisualStyleBackColor = true;
             // 
+            // BTNRC
+            // 
+            this.BTNRC.Location = new System.Drawing.Point(300, 360);
+            this.BTNRC.Name = "BTNRC";
+            this.BTNRC.Size = new System.Drawing.Size(60, 23);
+            this.BTNRC.TabIndex = 46;
+            this.BTNRC.Text = "BTNRC";
+            this.BTNRC.UseVisualStyleBackColor = true;
+            this.BTNRC.Click += new System.EventHandler(this.BTNRC_Click);
+            // 
             // FinanceRC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(372, 396);
+            this.Controls.Add(this.BTNRC);
             this.Controls.Add(this.CBYearIndustry);
             this.Controls.Add(this.DTP3Bursary);
             this.Controls.Add(this.NU3Bursary);
@@ -642,5 +654,6 @@
         private System.Windows.Forms.Label LBLTerm3Start;
         private System.Windows.Forms.Label LBLTerm3;
         private System.Windows.Forms.CheckBox CBYearIndustry;
+        private System.Windows.Forms.Button BTNRC;
     }
 }

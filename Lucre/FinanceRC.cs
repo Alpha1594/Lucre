@@ -61,10 +61,7 @@ namespace Lucre
                 NU3Bursary.Value = Main.RC.Years[index].Terms[2].Bursary;
                 DTP3Bursary.Value = Main.RC.Years[index].Terms[2].BPayment;
             }
-            catch
-            {
-
-            }
+            catch { }
         }
 
         private void BTNWriteRC_Click(object sender, EventArgs e)
@@ -91,6 +88,36 @@ namespace Lucre
         private void NUYear_ValueChanged(object sender, EventArgs e)
         {
             FillForm();
+        }
+
+        private void AddSFData2Trans()
+        {
+            foreach (Main.Year Y in Main.RC.Years)
+            {
+                int TermIndex = 0;
+                string Year = Y.Terms[0].SFPayment.Year.ToString().Substring(2) + "-";
+                Year += (Y.Terms[0].SFPayment.Year + 1).ToString().Substring(2) + ")";
+                foreach (Main.Term T in Y.Terms)
+                {
+                    TermIndex++;
+                    Main.Transaction Loan = new Main.Transaction("SF Loan (Term " + TermIndex.ToString() + ": " + Year, "Student Finance","SLC" , new Main.CapTime(T.StudentFinanceLoan, T.SFPayment), new Main.CapTime(T.StudentFinanceLoan, T.SFPayment), false, new string[0], null);
+                    Main.Transactions.In.Add(Loan);
+
+                    Main.Transaction Grant = new Main.Transaction("SF Grant (Term " + TermIndex.ToString() + ": " + Year, "Student Finance", "SLC", new Main.CapTime(T.StudentFinanceGrant, T.SFPayment), new Main.CapTime(T.StudentFinanceGrant, T.SFPayment), false, new string[0], null);
+                    Main.Transactions.In.Add(Grant);
+
+                    if (T.Bursary == 0)     //Most will have Loan & Grant !Bursary
+                        break;
+                    Main.Transaction Bursary = new Main.Transaction("Bursary (Term " + TermIndex.ToString() + ": " + Year, "Student Finance", "SLC", new Main.CapTime(T.Bursary, T.Duration.Start), new Main.CapTime(T.Bursary, T.Duration.Start), false, new string[0], null);
+                    Main.Transactions.In.Add(Bursary);
+                }
+            }
+        }
+
+        private void BTNRC_Click(object sender, EventArgs e)
+        {
+            AddSFData2Trans();
+            Main.SaveTransactions();
         }
     }
 }

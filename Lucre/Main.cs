@@ -28,13 +28,27 @@ namespace Lucre
             }
         }
 
+        public struct DurationN
+        {
+            public DateTime? Start;
+            public DateTime? End;
+            public DurationN(DateTime? Start, DateTime? End)
+            {
+                this.Start = Start;
+                this.End = End;
+            }
+        }
+
         #region RC
         public struct Term
         {
             public Duration Duration;
+
             public Decimal StudentFinanceLoan;
             public Decimal StudentFinanceGrant;
+
             public DateTime SFPayment;
+
             public Decimal Bursary;
             public DateTime BPayment;
             public Term(Duration Duration, Decimal StudentFinanceLoan, Decimal StudentFinanceGrant,
@@ -79,6 +93,7 @@ namespace Lucre
             {
                 FileStream FS = new FileStream("Data\\Finance.rc", FileMode.Open);
                 XmlSerializer XSR = new XmlSerializer(typeof(SFinanceRC));
+                FS.Dispose();
                 return (SFinanceRC)XSR.Deserialize(FS);
             }
             catch
@@ -219,10 +234,14 @@ namespace Lucre
             CheckURI();
             if (File.Exists("Data\\Finance.rc"))
             {
-                FileStream FS = new FileStream("Data\\Finance.rc", FileMode.Open);
-                XmlSerializer XSR = new XmlSerializer(typeof(SFinanceRC));
-                RC = (SFinanceRC)XSR.Deserialize(FS);
-                FS.Dispose();
+                //try
+                //{
+                    FileStream FS = new FileStream("Data\\Finance.rc", FileMode.Open);
+                    XmlSerializer XSR = new XmlSerializer(typeof(SFinanceRC));
+                    RC = (SFinanceRC)XSR.Deserialize(FS);
+                    FS.Dispose();
+                //}
+                //catch { MessageBox.Show("Filestream is being silly pleb"); }
             }
             else
             {
